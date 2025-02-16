@@ -13,34 +13,38 @@ import { useAccount } from 'wagmi';
 
 export default function App() {
   const [isMobile, setIsMobile] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [isPWA, setIsPWA] = useState(false);
   const { address, isConnected } = useAccount();
 
   useEffect(() => {
     // Check if device is mobile
-    setIsMobile(window.innerWidth <= 768);
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handleResize);
+    const checkMobile = () => {
+      const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      setIsMobile(mobile);
+    };
 
-    // Check if app is installed (running in standalone mode)
-    setIsStandalone(window.matchMedia('(display-mode: standalone)').matches);
+    // Check if running as PWA
+    const checkPWA = () => {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as any).standalone ||
+        document.referrer.includes('android-app://');
+      
+      setIsPWA(isStandalone);
+    };
 
-    // Show install prompt if on mobile and not installed
-    if (isMobile && !isStandalone) {
-      setShowInstallPrompt(true);
-    }
+    checkMobile();
+    checkPWA();
 
-    return () => window.removeEventListener('resize', handleResize);
-  }, [isMobile, isStandalone]);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const MORPHO_VAULT_ADDRESS = '0x543257eF2161176D7C8cD90BA65C2d4CaEF5a796';
   const COMMERCE_PRODUCT_ID = '437807eb-e9ff-4fd3-9760-1ee5a7a8d650';
   const COMMERCE_CHECKOUT_URL = `https://commerce.coinbase.com/checkout/${COMMERCE_PRODUCT_ID}`;
   
-  // Define USDC and cbBTC tokens for Base (chainId: 8453)
   const USDC: Token = {
-    address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC on Base
+    address: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
     chainId: 8453,
     decimals: 6,
     name: 'USD Coin',
@@ -49,7 +53,7 @@ export default function App() {
   };
   
   const cbBTC: Token = {
-    address: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf', // cbBTC on Base (8 decimals)
+    address: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
     chainId: 8453,
     decimals: 8,
     name: 'Coinbase Wrapped BTC',
@@ -59,49 +63,75 @@ export default function App() {
 
   const swappableTokens = [USDC, cbBTC];
 
-  // Add to Home Screen Prompt for mobile browsers
-  if (showInstallPrompt) {
+  // Show install instructions when in mobile browser
+  if (isMobile && !isPWA) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-black to-purple-900 text-white">
         <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center">
-          <h1 className="text-3xl font-bold mb-6">Welcome to CocoBTC</h1>
-          <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl max-w-sm mx-auto">
-            <h2 className="text-xl font-semibold mb-4">Install App</h2>
-            <p className="mb-6">For the best experience, please add CocoBTC to your home screen:</p>
-            <div className="space-y-4 text-left">
-              <div className="flex items-start gap-3">
-                <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">1</span>
-                <p>Tap the share button <span className="inline-block w-6 h-6 align-middle">⬆️</span> in your browser</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">2</span>
-                <p>Scroll down and tap "Add to Home Screen"</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">3</span>
-                <p>Tap "Add" to install</p>
+          <div className="max-w-sm mx-auto">
+            <img 
+              src="/apple-icon-180.png" 
+              alt="CocoBTC Logo" 
+              className="w-24 h-24 mx-auto mb-6 rounded-xl shadow-lg"
+            />
+            <h1 className="text-3xl font-bold mb-6">Install CocoBTC</h1>
+            <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl">
+              <div className="space-y-6">
+                <div className="text-left">
+                  <h3 className="font-semibold text-lg mb-2">On iPhone:</h3>
+                  <ol className="space-y-4">
+                    <li className="flex items-start gap-3">
+                      <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">1</span>
+                      <p>Tap the Share button <span className="inline-block w-6 h-6 align-middle">⬆️</span></p>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">2</span>
+                      <p>Scroll down and tap "Add to Home Screen" <span className="inline-block w-6 h-6 align-middle">🏠</span></p>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">3</span>
+                      <p>Tap "Add" in the top right</p>
+                    </li>
+                  </ol>
+                </div>
+
+                <div className="text-left">
+                  <h3 className="font-semibold text-lg mb-2">On Android:</h3>
+                  <ol className="space-y-4">
+                    <li className="flex items-start gap-3">
+                      <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">1</span>
+                      <p>Tap the menu button <span className="inline-block w-6 h-6 align-middle">⋮</span></p>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">2</span>
+                      <p>Tap "Add to Home screen"</p>
+                    </li>
+                  </ol>
+                </div>
               </div>
             </div>
-            <button 
-              onClick={() => setShowInstallPrompt(false)}
-              className="mt-8 w-full bg-blue-600 hover:bg-blue-700 transition-colors py-3 px-4 rounded-lg"
-            >
-              Continue in Browser
-            </button>
+            <p className="mt-6 text-sm text-gray-300">
+              Installing as an app provides the best experience
+            </p>
           </div>
         </div>
       </div>
     );
   }
 
-  // Mobile Connect Screen (only shown when app is installed)
-  if (isMobile && !isConnected) {
+  // Show wallet connect screen when in PWA and not connected
+  if (isPWA && !isConnected) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-black to-purple-900 text-white flex flex-col items-center justify-center p-6">
+        <img 
+          src="/apple-icon-180.png" 
+          alt="CocoBTC Logo" 
+          className="w-24 h-24 rounded-xl shadow-lg mb-8"
+        />
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome to CocoBTC</h1>
-          <p className="text-gray-300 mb-6">Connect your wallet to get started</p>
-          <p className="text-sm text-gray-400 mb-8">Supports Coinbase Wallet, MetaMask, and more</p>
+          <h1 className="text-3xl font-bold mb-4">Welcome to CocoBTC</h1>
+          <p className="text-gray-300 mb-2">Connect your wallet to get started</p>
+          <p className="text-sm text-gray-400">Supports Coinbase Wallet, MetaMask, and Smart Wallets</p>
         </div>
         <div className="w-full max-w-sm">
           <Wallet>
