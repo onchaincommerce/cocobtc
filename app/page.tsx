@@ -9,9 +9,11 @@ import { Identity, Avatar, Name, Address, EthBalance } from '@coinbase/onchainki
 import { color } from '@coinbase/onchainkit/theme';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
 
 export default function App() {
   const [isMobile, setIsMobile] = useState(false);
+  const { address, isConnected } = useAccount();
 
   useEffect(() => {
     setIsMobile(window.innerWidth <= 768);
@@ -45,27 +47,49 @@ export default function App() {
 
   const swappableTokens = [USDC, cbBTC];
 
+  // Mobile Connect Screen
+  if (isMobile && !isConnected) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-black to-purple-900 text-white flex flex-col items-center justify-center p-6">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold mb-2">Welcome to CocoBTC</h1>
+          <p className="text-gray-300">Connect your wallet to get started</p>
+        </div>
+        <div className="w-full max-w-sm">
+          <Wallet>
+            <ConnectWallet className="w-full py-4 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 transition-colors flex items-center justify-center gap-3">
+              <Avatar className="h-6 w-6" />
+              <span className="text-lg">Connect Wallet</span>
+            </ConnectWallet>
+          </Wallet>
+        </div>
+      </div>
+    );
+  }
+
   const mainContent = (
     <>
-      <div className="flex-1 min-w-[300px] flex flex-col items-center justify-center gap-6 p-6 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl">
+      <div className={`${isMobile ? 'w-full' : 'flex-1'} min-w-[300px] flex flex-col items-center justify-center gap-4 p-4 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl`}>
+        <h2 className="text-xl font-bold mb-2">Pay with Crypto</h2>
         <Checkout productId={COMMERCE_PRODUCT_ID}>
           <CheckoutButton coinbaseBranded />
           <CheckoutStatus />
         </Checkout>
-        <div className="mt-4 p-4 bg-white rounded-lg shadow-lg">
+        <div className="mt-2 p-3 bg-white rounded-lg shadow-lg">
           <QRCodeSVG 
             value={COMMERCE_CHECKOUT_URL}
-            size={200}
+            size={isMobile ? 150 : 200}
             bgColor="#FFFFFF"
             fgColor="#000000"
             level="L"
             includeMargin={false}
           />
         </div>
-        <p className="text-sm text-gray-300 mt-2">Scan to pay on mobile</p>
+        <p className="text-sm text-gray-300">Scan to pay on another device</p>
       </div>
 
-      <div className="flex-1 min-w-[300px] flex flex-col items-center justify-center gap-6 p-6 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl">
+      <div className={`${isMobile ? 'w-full' : 'flex-1'} min-w-[300px] flex flex-col items-center justify-center gap-4 p-4 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl`}>
+        <h2 className="text-xl font-bold mb-2">Swap USDC to cbBTC</h2>
         <Swap>
           <SwapAmountInput
             label="Sell"
@@ -86,7 +110,8 @@ export default function App() {
         </Swap>
       </div>
 
-      <div className="flex-1 min-w-[300px] flex flex-col items-center justify-center gap-6 p-6 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl">
+      <div className={`${isMobile ? 'w-full' : 'flex-1'} min-w-[300px] flex flex-col items-center justify-center gap-4 p-4 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl`}>
+        <h2 className="text-xl font-bold mb-2">Earn Interest</h2>
         <Earn vaultAddress={MORPHO_VAULT_ADDRESS} />
       </div>
     </>
@@ -112,7 +137,7 @@ export default function App() {
         </Wallet>
       </div>
 
-      <main className={`p-8 ${isMobile ? 'flex flex-col' : 'flex flex-row items-stretch'} min-h-screen`}>
+      <main className={`p-4 ${isMobile ? 'flex flex-col gap-6 pt-20' : 'flex flex-row items-stretch'} min-h-screen`}>
         {mainContent}
       </main>
     </div>
