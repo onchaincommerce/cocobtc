@@ -52,12 +52,12 @@ export default function App() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] text-[#00ff00] flex flex-col items-center justify-center p-6">
+      <div className="min-h-screen bg-[var(--ock-bg-default)] text-[var(--ock-text-foreground)] flex flex-col items-center justify-center p-6">
         <div className="w-full max-w-sm text-center">
           <h1 className="text-4xl font-mono mb-6 animate-pulse">[CocoBTC]</h1>
-          <div className="bg-black/50 border border-[#00ff00]/30 rounded-lg p-6 mb-8">
+          <div className="bg-[var(--ock-bg-alternate)] border border-[var(--ock-line-primary)] rounded-lg p-6 mb-8">
             <Wallet>
-              <ConnectWallet className="w-full py-4 px-6 rounded-lg bg-[#001a00] hover:bg-[#002600] transition-colors border border-[#00ff00] text-[#00ff00] font-mono flex items-center justify-center gap-3">
+              <ConnectWallet className="w-full py-4 px-6 rounded-lg bg-[var(--ock-bg-primary)] hover:bg-[var(--ock-bg-primary-hover)] transition-colors border border-[var(--ock-line-primary)] text-[var(--ock-text-foreground)] font-mono flex items-center justify-center gap-3">
                 <span className="text-lg">CONNECT_WALLET</span>
               </ConnectWallet>
             </Wallet>
@@ -68,25 +68,25 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#00ff00]">
+    <div className="min-h-screen bg-[var(--ock-bg-default)] text-[var(--ock-text-foreground)]">
       {/* Header with wallet */}
-      <div className="fixed top-0 left-0 right-0 bg-black/80 backdrop-blur-sm border-b border-[#00ff00]/20 p-4 z-50">
+      <div className="fixed top-0 left-0 right-0 bg-[var(--ock-bg-inverse)] backdrop-blur-sm border-b border-[var(--ock-line-primary)] p-4 z-50">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           <h1 className="text-xl font-mono">[CocoBTC]</h1>
           <Wallet>
             <ConnectWallet>
-              <div className="font-mono text-sm border border-[#00ff00]/30 rounded px-3 py-1">
+              <div className="font-mono text-sm border border-[var(--ock-line-primary)] rounded px-3 py-1">
                 <Name />
               </div>
             </ConnectWallet>
             <WalletDropdown>
-              <div className="bg-black border border-[#00ff00]/30 rounded-lg overflow-hidden">
+              <div className="bg-[var(--ock-bg-inverse)] border border-[var(--ock-line-primary)] rounded-lg overflow-hidden">
                 <Identity className="px-4 pt-3 pb-2 font-mono" hasCopyAddressOnClick>
                   <Name />
-                  <Address className="text-[#00ff00]/70" />
+                  <Address className="text-[var(--ock-text-foreground-muted)]" />
                   <EthBalance />
                 </Identity>
-                <WalletDropdownDisconnect className="px-4 py-2 hover:bg-[#001a00] transition-colors text-[#ff0000]" text="DISCONNECT" />
+                <WalletDropdownDisconnect className="px-4 py-2 hover:bg-[var(--ock-bg-primary)] transition-colors text-[var(--ock-text-error)]" text="DISCONNECT" />
               </div>
             </WalletDropdown>
           </Wallet>
@@ -96,7 +96,7 @@ export default function App() {
       {/* Main content */}
       <main className="pt-20 p-4 max-w-7xl mx-auto space-y-6">
         {/* Swap Section */}
-        <div className="bg-black/50 border border-[#00ff00]/30 rounded-xl p-4 backdrop-blur-sm">
+        <div className="bg-[var(--ock-bg-alternate)] border border-[var(--ock-line-primary)] rounded-xl p-4 backdrop-blur-sm">
           <h2 className="text-xl font-mono mb-4 px-2">{`>`} SWAP_USDC_TO_CBBTC</h2>
           <div className="swap-container">
             <Swap>
@@ -121,7 +121,7 @@ export default function App() {
         </div>
 
         {/* Earn Section */}
-        <div className="bg-black/50 border border-[#00ff00]/30 rounded-xl p-4 backdrop-blur-sm">
+        <div className="bg-[var(--ock-bg-alternate)] border border-[var(--ock-line-primary)] rounded-xl p-4 backdrop-blur-sm">
           <h2 className="text-xl font-mono mb-4 px-2">{`>`} EARN_INTEREST</h2>
           <div className="earn-container">
             <Earn 
@@ -131,7 +131,7 @@ export default function App() {
         </div>
 
         {/* Pay Section */}
-        <div className="bg-black/50 border border-[#00ff00]/30 rounded-xl p-4 backdrop-blur-sm">
+        <div className="bg-[var(--ock-bg-alternate)] border border-[var(--ock-line-primary)] rounded-xl p-4 backdrop-blur-sm">
           <h2 className="text-xl font-mono mb-4 px-2">{`>`} PAY_WITH_CRYPTO</h2>
           <div className="checkout-container space-y-4">
             <Checkout productId={COMMERCE_PRODUCT_ID}>
