@@ -67,26 +67,58 @@ export default function App() {
   if (isMobile && !isPWA) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-black to-purple-900 text-white">
-        <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center">
+        <div className="flex flex-col items-center justify-center min-h-screen p-6">
           <div className="max-w-sm mx-auto">
             <img 
               src="/apple-icon-180.png" 
               alt="CocoBTC Logo" 
               className="w-24 h-24 mx-auto mb-6 rounded-xl shadow-lg"
             />
-            <h1 className="text-3xl font-bold mb-6">Install CocoBTC</h1>
+            <h1 className="text-3xl font-bold mb-4 text-center">Welcome to CocoBTC</h1>
+            
+            {/* Project Explanation */}
+            <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl mb-6">
+              <h2 className="text-xl font-semibold mb-4 text-center">What is CocoBTC?</h2>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <span className="bg-blue-500/20 p-2 rounded-lg flex-shrink-0">💱</span>
+                  <p className="text-gray-200">Swap USDC to Coinbase's wrapped Bitcoin (cbBTC) on Base</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="bg-blue-500/20 p-2 rounded-lg flex-shrink-0">💰</span>
+                  <p className="text-gray-200">Earn interest on your cbBTC through Morpho</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <span className="bg-blue-500/20 p-2 rounded-lg flex-shrink-0">💸</span>
+                  <p className="text-gray-200">Pay for goods and services using crypto</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Install Instructions */}
             <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl">
+              <h2 className="text-xl font-semibold mb-4 text-center">Install App</h2>
+              <p className="text-gray-300 mb-6 text-center text-sm">Add CocoBTC to your home screen for the best experience:</p>
+              
               <div className="space-y-6">
                 <div className="text-left">
-                  <h3 className="font-semibold text-lg mb-2">On iPhone:</h3>
+                  <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                    <span className="text-xl">📱</span> On iPhone:
+                  </h3>
                   <ol className="space-y-4">
                     <li className="flex items-start gap-3">
                       <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">1</span>
-                      <p>Tap the Share button <span className="inline-block w-6 h-6 align-middle">⬆️</span></p>
+                      <div>
+                        <p>Tap the Share button</p>
+                        <span className="inline-block w-6 h-6 align-middle mt-1">⬆️</span>
+                      </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">2</span>
-                      <p>Scroll down and tap "Add to Home Screen" <span className="inline-block w-6 h-6 align-middle">🏠</span></p>
+                      <div>
+                        <p>Scroll and tap "Add to Home Screen"</p>
+                        <span className="inline-block w-6 h-6 align-middle mt-1">🏠</span>
+                      </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">3</span>
@@ -96,11 +128,16 @@ export default function App() {
                 </div>
 
                 <div className="text-left">
-                  <h3 className="font-semibold text-lg mb-2">On Android:</h3>
+                  <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                    <span className="text-xl">🤖</span> On Android:
+                  </h3>
                   <ol className="space-y-4">
                     <li className="flex items-start gap-3">
                       <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">1</span>
-                      <p>Tap the menu button <span className="inline-block w-6 h-6 align-middle">⋮</span></p>
+                      <div>
+                        <p>Tap the menu</p>
+                        <span className="inline-block w-6 h-6 align-middle mt-1">⋮</span>
+                      </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <span className="bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">2</span>
@@ -110,8 +147,9 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <p className="mt-6 text-sm text-gray-300">
-              Installing as an app provides the best experience
+
+            <p className="mt-6 text-sm text-gray-300 text-center">
+              Once installed, you'll be able to connect your wallet and start using CocoBTC
             </p>
           </div>
         </div>
@@ -129,8 +167,8 @@ export default function App() {
           className="w-24 h-24 rounded-xl shadow-lg mb-8"
         />
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-4">Welcome to CocoBTC</h1>
-          <p className="text-gray-300 mb-2">Connect your wallet to get started</p>
+          <h1 className="text-3xl font-bold mb-4">Start Using CocoBTC</h1>
+          <p className="text-gray-300 mb-2">Connect your wallet to begin swapping and earning</p>
           <p className="text-sm text-gray-400">Supports Coinbase Wallet, MetaMask, and Smart Wallets</p>
         </div>
         <div className="w-full max-w-sm">
