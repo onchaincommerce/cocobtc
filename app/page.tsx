@@ -25,9 +25,19 @@ export default function App() {
 
     // Check if running as PWA
     const checkPWA = () => {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as any).standalone ||
-        document.referrer.includes('android-app://');
+      const isStandalone = (
+        window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as any).standalone === true ||
+        window.location.href.includes('?mode=pwa') ||
+        document.referrer.includes('android-app://')
+      );
+      
+      console.log('PWA Status:', {
+        matchMedia: window.matchMedia('(display-mode: standalone)').matches,
+        navigatorStandalone: (window.navigator as any).standalone,
+        urlMode: window.location.href.includes('?mode=pwa'),
+        androidApp: document.referrer.includes('android-app://')
+      });
       
       setIsPWA(isStandalone);
     };
@@ -35,8 +45,18 @@ export default function App() {
     checkMobile();
     checkPWA();
 
+    // Add event listener for display mode changes
+    const mediaQuery = window.matchMedia('(display-mode: standalone)');
+    const handleDisplayModeChange = (e: MediaQueryListEvent) => {
+      setIsPWA(e.matches);
+    };
+    mediaQuery.addListener(handleDisplayModeChange);
+
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      mediaQuery.removeListener(handleDisplayModeChange);
+    };
   }, []);
 
   const MORPHO_VAULT_ADDRESS = '0x543257eF2161176D7C8cD90BA65C2d4CaEF5a796';
