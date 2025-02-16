@@ -25,36 +25,46 @@ export default function App() {
 
     // Check if running as PWA
     const checkPWA = () => {
-      const isStandalone = (
-        window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as any).standalone === true ||
-        window.location.href.includes('?mode=pwa') ||
-        document.referrer.includes('android-app://')
-      );
+      // For iOS
+      const isIOSPWA = (window.navigator as any).standalone === true;
       
-      console.log('PWA Status:', {
-        matchMedia: window.matchMedia('(display-mode: standalone)').matches,
-        navigatorStandalone: (window.navigator as any).standalone,
-        urlMode: window.location.href.includes('?mode=pwa'),
-        androidApp: document.referrer.includes('android-app://')
+      // For Android/Desktop
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      
+      // For debugging
+      console.log('PWA Detection:', {
+        isIOSPWA,
+        isStandalone,
+        userAgent: window.navigator.userAgent,
+        platform: window.navigator.platform
       });
-      
-      setIsPWA(isStandalone);
+
+      setIsPWA(isIOSPWA || isStandalone);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkPWA();
+      }
     };
 
     checkMobile();
     checkPWA();
 
+    window.addEventListener('resize', checkMobile);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
     // Add event listener for display mode changes
     const mediaQuery = window.matchMedia('(display-mode: standalone)');
     const handleDisplayModeChange = (e: MediaQueryListEvent) => {
+      console.log('Display mode changed:', e.matches);
       setIsPWA(e.matches);
     };
     mediaQuery.addListener(handleDisplayModeChange);
 
-    window.addEventListener('resize', checkMobile);
     return () => {
       window.removeEventListener('resize', checkMobile);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       mediaQuery.removeListener(handleDisplayModeChange);
     };
   }, []);
