@@ -98,43 +98,44 @@ export default function App() {
         {/* Swap Section */}
         <div className="bg-black/50 border border-[#00ff00]/30 rounded-xl p-4 backdrop-blur-sm">
           <h2 className="text-xl font-mono mb-4 px-2">{`>`} SWAP_USDC_TO_CBBTC</h2>
-          <Swap>
-            <SwapAmountInput
-              label="INPUT"
-              swappableTokens={swappableTokens}
-              token={USDC}
-              type="from"
-              className="bg-[#001a00] border-[#00ff00]"
-            />
-            <SwapToggleButton className="mx-auto my-2 hover:rotate-180 transition-all duration-500" />
-            <SwapAmountInput
-              label="OUTPUT"
-              swappableTokens={swappableTokens}
-              token={cbBTC}
-              type="to"
-              className="bg-[#001a00] border-[#00ff00]"
-            />
-            <SwapButton className="w-full mt-4 bg-[#001a00] hover:bg-[#002600] transition-colors border border-[#00ff00] text-[#00ff00] font-mono py-3 rounded-lg" />
-            <SwapMessage className="mt-2 font-mono text-sm" />
-            <SwapToast />
-          </Swap>
+          <div className="swap-container">
+            <Swap>
+              <SwapAmountInput
+                label="INPUT"
+                swappableTokens={swappableTokens}
+                token={USDC}
+                type="from"
+              />
+              <SwapToggleButton className="mx-auto my-2 hover:rotate-180 transition-all duration-500" />
+              <SwapAmountInput
+                label="OUTPUT"
+                swappableTokens={swappableTokens}
+                token={cbBTC}
+                type="to"
+              />
+              <SwapButton className="w-full mt-4" />
+              <SwapMessage className="mt-2 font-mono text-sm" />
+              <SwapToast />
+            </Swap>
+          </div>
         </div>
 
         {/* Earn Section */}
         <div className="bg-black/50 border border-[#00ff00]/30 rounded-xl p-4 backdrop-blur-sm">
           <h2 className="text-xl font-mono mb-4 px-2">{`>`} EARN_INTEREST</h2>
-          <Earn 
-            vaultAddress={MORPHO_VAULT_ADDRESS}
-            className="font-mono"
-          />
+          <div className="earn-container">
+            <Earn 
+              vaultAddress={MORPHO_VAULT_ADDRESS}
+            />
+          </div>
         </div>
 
         {/* Pay Section */}
         <div className="bg-black/50 border border-[#00ff00]/30 rounded-xl p-4 backdrop-blur-sm">
           <h2 className="text-xl font-mono mb-4 px-2">{`>`} PAY_WITH_CRYPTO</h2>
-          <div className="space-y-4">
+          <div className="checkout-container space-y-4">
             <Checkout productId={COMMERCE_PRODUCT_ID}>
-              <CheckoutButton className="w-full bg-[#001a00] hover:bg-[#002600] transition-colors border border-[#00ff00] text-[#00ff00] font-mono py-3 rounded-lg" />
+              <CheckoutButton />
               <CheckoutStatus className="mt-2 font-mono text-sm" />
             </Checkout>
             {isMobile && (

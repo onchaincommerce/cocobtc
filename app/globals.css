@@ -3,21 +3,92 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground-rgb: 0, 255, 0;
+  --background-start-rgb: 10, 10, 10;
+  --background-end-rgb: 0, 0, 0;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+/* Custom styles for Onchainkit components */
+.swap-container {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  /* Make swap inputs smaller on mobile */
+  .swap-container input {
+    font-size: 16px !important;
+    padding: 8px !important;
+  }
+
+  /* Adjust token selector width */
+  .swap-container button[aria-haspopup="listbox"] {
+    max-width: 120px !important;
+  }
+
+  /* Make buttons more compact */
+  .swap-container button {
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+  }
+
+  /* Adjust dropdown menus */
+  .swap-container [role="listbox"] {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* Hacker theme overrides */
+.swap-container,
+.earn-container,
+.checkout-container {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  --tw-border-opacity: 0.3;
+  border-color: rgb(0 255 0 / var(--tw-border-opacity));
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+/* Button overrides */
+.swap-container button,
+.earn-container button,
+.checkout-container button {
+  background-color: rgb(0, 26, 0) !important;
+  border: 1px solid rgb(0, 255, 0, 0.3) !important;
+  color: rgb(0, 255, 0) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+.swap-container button:hover,
+.earn-container button:hover,
+.checkout-container button:hover {
+  background-color: rgb(0, 38, 0) !important;
+  border-color: rgb(0, 255, 0, 0.5) !important;
+}
+
+/* Input overrides */
+.swap-container input,
+.earn-container input,
+.checkout-container input {
+  background-color: rgb(0, 26, 0) !important;
+  border: 1px solid rgb(0, 255, 0, 0.3) !important;
+  color: rgb(0, 255, 0) !important;
+}
+
+/* Text color overrides */
+.swap-container *,
+.earn-container *,
+.checkout-container * {
+  color: rgb(0, 255, 0) !important;
 }
 
 @layer utilities {
