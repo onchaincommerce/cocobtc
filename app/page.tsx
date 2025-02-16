@@ -8,8 +8,18 @@ import { Wallet, ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from 
 import { Identity, Avatar, Name, Address, EthBalance } from '@coinbase/onchainkit/identity';
 import { color } from '@coinbase/onchainkit/theme';
 import { QRCodeSVG } from 'qrcode.react';
+import { useEffect, useState } from 'react';
 
 export default function App() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 768);
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const MORPHO_VAULT_ADDRESS = '0x543257eF2161176D7C8cD90BA65C2d4CaEF5a796';
   const COMMERCE_PRODUCT_ID = '437807eb-e9ff-4fd3-9760-1ee5a7a8d650';
   const COMMERCE_CHECKOUT_URL = `https://commerce.coinbase.com/checkout/${COMMERCE_PRODUCT_ID}`;
@@ -35,6 +45,53 @@ export default function App() {
 
   const swappableTokens = [USDC, cbBTC];
 
+  const mainContent = (
+    <>
+      <div className="flex-1 min-w-[300px] flex flex-col items-center justify-center gap-6 p-6 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl">
+        <Checkout productId={COMMERCE_PRODUCT_ID}>
+          <CheckoutButton coinbaseBranded />
+          <CheckoutStatus />
+        </Checkout>
+        <div className="mt-4 p-4 bg-white rounded-lg shadow-lg">
+          <QRCodeSVG 
+            value={COMMERCE_CHECKOUT_URL}
+            size={200}
+            bgColor="#FFFFFF"
+            fgColor="#000000"
+            level="L"
+            includeMargin={false}
+          />
+        </div>
+        <p className="text-sm text-gray-300 mt-2">Scan to pay on mobile</p>
+      </div>
+
+      <div className="flex-1 min-w-[300px] flex flex-col items-center justify-center gap-6 p-6 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl">
+        <Swap>
+          <SwapAmountInput
+            label="Sell"
+            swappableTokens={swappableTokens}
+            token={USDC}
+            type="from"
+          />
+          <SwapToggleButton className="hover:rotate-180 transition-all duration-500" />
+          <SwapAmountInput
+            label="Buy"
+            swappableTokens={swappableTokens}
+            token={cbBTC}
+            type="to"
+          />
+          <SwapButton className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all duration-300" />
+          <SwapMessage />
+          <SwapToast />
+        </Swap>
+      </div>
+
+      <div className="flex-1 min-w-[300px] flex flex-col items-center justify-center gap-6 p-6 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl">
+        <Earn vaultAddress={MORPHO_VAULT_ADDRESS} />
+      </div>
+    </>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-black to-purple-900 text-white">
       <div className="fixed top-4 right-4 z-10">
@@ -55,49 +112,8 @@ export default function App() {
         </Wallet>
       </div>
 
-      <main className="flex items-stretch min-h-screen p-8">
-        <div className="flex-1 flex flex-col items-center justify-center gap-6 p-6 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl">
-          <Checkout productId={COMMERCE_PRODUCT_ID}>
-            <CheckoutButton coinbaseBranded />
-            <CheckoutStatus />
-          </Checkout>
-          <div className="mt-4 p-4 bg-white rounded-lg shadow-lg">
-            <QRCodeSVG 
-              value={COMMERCE_CHECKOUT_URL}
-              size={200}
-              bgColor="#FFFFFF"
-              fgColor="#000000"
-              level="L"
-              includeMargin={false}
-            />
-          </div>
-          <p className="text-sm text-gray-300 mt-2">Scan to pay on mobile</p>
-        </div>
-
-        <div className="flex-1 flex items-center justify-center p-6 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl">
-          <Swap>
-            <SwapAmountInput
-              label="Sell"
-              swappableTokens={swappableTokens}
-              token={USDC}
-              type="from"
-            />
-            <SwapToggleButton className="hover:rotate-180 transition-all duration-500" />
-            <SwapAmountInput
-              label="Buy"
-              swappableTokens={swappableTokens}
-              token={cbBTC}
-              type="to"
-            />
-            <SwapButton className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all duration-300" />
-            <SwapMessage />
-            <SwapToast />
-          </Swap>
-        </div>
-
-        <div className="flex-1 flex items-center justify-center p-6 backdrop-blur-sm bg-white/5 rounded-xl m-2 hover:bg-white/10 transition-all duration-300 shadow-xl">
-          <Earn vaultAddress={MORPHO_VAULT_ADDRESS} />
-        </div>
+      <main className={`p-8 ${isMobile ? 'flex flex-col' : 'flex flex-row items-stretch'} min-h-screen`}>
+        {mainContent}
       </main>
     </div>
   );
